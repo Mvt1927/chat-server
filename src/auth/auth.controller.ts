@@ -88,7 +88,7 @@ export class AuthController {
      * 
      * @Post `signup`
      * 
-     * @param inputPayload - giá trị `JSON` nhận vào từ client chứa 1 phần tử :
+     * @param inputPayload- giá trị `JSON` nhận vào từ client chứa 1 phần tử :
      * - `access_token`: token đăng nhập.
      * 
      * @returns không trả về hoặc throw `HttpException`
