@@ -97,7 +97,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Put(Routes.SIGN_OUT)
     signout(@Body() inputPayload: AuthSignOut) {
-        return this.authService.signout(inputPayload)
+        return this.authService.signout(inputPayload) 
     }
 
     @UseGuards(JwtGuard)
