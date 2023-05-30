@@ -21,11 +21,12 @@ model User {
   firstName String?
   lastName  String?
   // peerId    String?
+  token     String?
 
   stats String?
 
-  chatSend     Message[]       @relation("userSend")
-  chatReceive  Message[]       @relation("userReceive")
+  chatSend     Chat[]          @relation("userSend")
+  chatReceive  Chat[]          @relation("userReceive")
   UserFirst    Friend[]        @relation("userFirst")
   UserSecond   Friend[]        @relation("userSecond")
   Groups       MemberOnGroup[]
@@ -38,19 +39,42 @@ model User {
   @@map("users")
 }
 
-model Message {
-  id            Int    @id @default(autoincrement())
-  msg           String
+model Chat {
+  id            Int    @id @unique @default(autoincrement())
+  type          String
   userSendId    Int
   userReceiveId Int
 
-  stats String?
+  messageId Int? @unique
+
+  imageID Int?
+
+  stickerID Int?
+
+  callID Int?
+
+  status String?
 
   userSend    User @relation("userSend", fields: [userSendId], references: [id], map: "userSend_fkey")
   userReceive User @relation("userReceive", fields: [userReceiveId], references: [id], map: "userReceive_fkey")
 
+  messages Messages? @relation("messageId", fields: [messageId], references: [id], map: "messageId_fkey")
+
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updateAt  DateTime @updatedAt
+
+  @@map("chats")
+}
+
+model Messages {
+  id     Int     @id @unique @default(autoincrement())
+  value    String
+  status String?
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updateAt  DateTime @updatedAt
+
+  chat Chat? @relation("messageId")
 
   @@map("messages")
 }
@@ -84,7 +108,7 @@ model Group {
   lastMessageAt   DateTime? @updatedAt
   avatar          String?
 
-  stats String?
+  status String?
 
   creator  User            @relation(fields: [creatorId], references: [id])
   messages GroupMessage[]
@@ -102,7 +126,7 @@ model MemberOnGroup {
 
   permision Json?
 
-  stats String?
+  status String?
 
   member User  @relation(fields: [memberId], references: [id])
   group  Group @relation(fields: [groupId], references: [id])
@@ -121,7 +145,7 @@ model GroupMessage {
   memberSendId Int
   message      String
 
-  stats String?
+  status String?
 
   Group    Group? @relation(fields: [groupId], references: [id])
   userSend User?  @relation(fields: [memberSendId], references: [id])
